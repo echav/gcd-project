@@ -11,6 +11,7 @@ The files in this project are:
 ### How to use this script
 
 As requested in the assignment, download the data file here: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip.
+
 Unzip it: this will create a folder named `UCI HAR Dataset` that contains the data files.
 
 Download the script `run_analysis.R`.
