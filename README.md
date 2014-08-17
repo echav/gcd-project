@@ -8,5 +8,8 @@ The files in this project are:
 * `CodeBook.md` : describes the variables, the data, and any transformations or work that was performed to clean up the data
 * `run_analysis.R` : code, commented inside and below in this file
 
-### Code explanation
+### How to use this script
+
+### How this script works
+
 
