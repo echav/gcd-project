@@ -36,7 +36,6 @@ After that, the 2 resultting data frames are row bound.
 
 At last, the column names are loaded from the `features` file, and completed so that appropriate column names are assigned to the global data frame.
 
-
 #### Keeping only relevant columns (question 2)
 
 This is done using the `subset` R function, and a regular expression to keep only columns which have a name containing `subject`, `mean`, `std` or equaling `y`:
@@ -53,5 +52,9 @@ This is done in 3 operations in the `setDescriptiveActivityNames` function:
 
 #### Naming appropriately the data set with descriptive variable names (question 4)
 
-All the work has actually been done gradually in the previous steps: we used the provided column names for the mean and std columns, named a subject column to identify for the sample identified, named as activity the column containing activity labels.
+We use a simple transformation to rename the variables that look like tBodyAcc-mean()-X	in to something like timeBodyAcc.mean.X:
+* replace `t` prefixes by `Time` and `f` prefixes by `Freq`
+* replace `-` separators by `.` (seems to be a more common convention in R)
+* remove the parenthesis that do not really add any useful information to the reader
 
+This is done in the `tidyColNames` function using regular expressions and the R `gsub` function.

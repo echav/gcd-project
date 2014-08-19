@@ -30,7 +30,7 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
       # Helper function to load provided data files in a table
       # Arguments:
       # - dataSetName : one of "train", "test"
-      # - dataNature : one of "X", "y", "subject"
+      # - dataNature : one of "X", "y", "Subject"
       loadTable <- function(dataSetName, dataNature) {
         # compute the file name to load in a compatible way for different OS's (Windows vs rest of the world)
         filename <- file.path(rootInputDataFolder, dataSetName, paste(dataNature, "_", dataSetName, ".txt", sep=''))
@@ -40,7 +40,7 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
       
       X <- loadTable(dataSetName, "X")
       y <- loadTable(dataSetName, "y")
-      subject <- loadTable(dataSetName, "subject")
+      subject <- loadTable(dataSetName, "Subject")
       cbind(subject, X, y)
     }
     
@@ -69,8 +69,8 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
     # load the activity names file
     activityNames <- read.table(file = file.path(rootInputDataFolder, "activity_labels.txt"))
     # rename its columns nicely
-    colnames(activityNames) <- c("y", "activity")
-    # do a join wih the actual data based on the nu:eric value of the activity ('y' column in both data frames)
+    colnames(activityNames) <- c("y", "Activity")
+    # do a join wih the actual data based on the numeric value of the activity ('y' column in both data frames)
     data <- merge(x = data, y=activityNames, by.x = "y", by.y = "y")
     # remove the now useless 'y' column in the resulting data frame
     data <- subset(data,select=-c(y))
@@ -79,18 +79,43 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
   
   }
 
+  # Function that makes more readable column names, by applying a clanup algorithm to each of them (replace f or t 
+  # at the beginning by resp Freq and Time, remove parenthesis, replace - separator by .). Returns the input data 
+  # frame with modified column names.
+  #
+  # Arguments:
+  # - the data frame for which col names must be cleaned up
+  tidyColNames <- function(data) {
+    # clean up algo implementation
+    tidy <- function(dirty) {
+      # replace starting f followed by uppercase by freq
+      dirty <- gsub("^(f)([A-Z])", "Freq\\2", dirty)  
+      # replace starting t followed by uppercase by time
+      dirty <- gsub("^(t)([A-Z])", "Time\\2", dirty)        
+      # remove ()
+      dirty <- gsub("\\(\\)", "", dirty)
+      # replace - by . and return the result
+      gsub("\\-", ".", dirty)
+    }
+    # apply the algorithm to all column names and set the new col names to the input data frame
+    colnames(data) <- lapply(names(data), tidy)    
+    # return the modified data frame
+    data
+  }
+  
   ## ACTUAL WORK  #####################################################################################################
 
   # Q1 : loads all the provided data and set column names
   data <- loadRawData()
   
   # Q2 : keep only subject, means and stds, and y columns
-  data <- data[,grepl("(subject)|(mean)|(std)|(^y$)", names(data))]
+  data <- data[,grepl("(Subject)|(mean)|(std)|(^y$)", names(data))]
   
   # Q3 : load the lables for activities and merge with data 
   data <- setDescriptiveActivityNames(data)
 
-  # Q4 : nothing left to do
+  # Q4 : tidy column names
+  data <- tidyColNames(data)
   
   # save the resulting data
   write.table(x = data, file = outputFilename)
