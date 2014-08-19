@@ -26,4 +26,32 @@ Note: the `run_analysis` function also returns the result data so you can use it
 
 ### How this script works
 
+#### Data loading (question 1)
+
+The `loadRawData` function takes care of loading all the relevant data (the `X`, `y` and `subject` files for resp. the `train` and `test` file collections), and bind them in a single data frame. 
+
+For the `test` files, the 3 `X`, `y` and `subject` files are actually loaded by the same `loadTable` function, and then they are coloumn bound. This is done in the `loadAndBind`function that is also used to load the `train` data, given that the files organization is the same in both data sets.
+
+After that, the 2 resultting data frames are row bound.
+
+At last, the column names are loaded from the `features` file, and completed so that appropriate column names are assigned to the global data frame.
+
+
+#### Keeping only relevant columns (question 2)
+
+This is done using the `subset` R function, and a regular expression to keep only columns which have a name containing `subject`, `mean`, `std` or equaling `y`:
+```
+data <- data[,grepl("(subject)|(mean)|(std)|(^y$)", names(data))]
+```
+
+#### Setting the descriptive avtivity names (question 3)
+
+This is done in 3 operations in the `setDescriptiveActivityNames` function:
+* load the `activity_labels.txt` in a data frame, and name its columns resp. `y` and `activity`
+* execute an R `merge` on the `y` column between this data frame and the actual data frame we prepared before (both have a `y` column); this builds a join.
+* remove the now useless `y` column in  the resulting data frame
+
+#### Naming appropriately the data set with descriptive variable names (question 4)
+
+All the work has actually been done gradually in the previous steps: we used the provided column names for the mean and std columns, named a subject column to identify for the sample identified, named as activity the column containing activity labels.
 

@@ -3,12 +3,13 @@
 # (and returns) the cleaned up data.
 #
 # Arguments:
-# - rootInputDataFolder : where the input unzziped data files are (keep the provided file organization)
+# - rootInputDataFolder : where the input unzziped data files are (assuming the file organization inside the unzipped 
+# folder has not been changed)
 # - outputFilename : file where cleaned data will be saved
 #
 # Example usage:
 #   source("run_analysis.R")
-#   run_analysis("/home/ech/UCI HAR Dataset", "/home/ech/output.txt")
+#   run_analysis("/Users/ech/Documents/docs_no_backup/UCI HAR Dataset", "/Users/ech/Documents/docs_no_backup/output.txt")
 #
 run_analysis <- function(rootInputDataFolder, outputFilename) {
   
@@ -32,7 +33,7 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
       # - dataNature : one of "X", "y", "subject"
       loadTable <- function(dataSetName, dataNature) {
         # compute the file name to load in a compatible way for different OS's (Windows vs rest of the world)
-        filename <- file.path(rootDataFolder, dataSetName, paste(dataNature, "_", dataSetName, ".txt", sep=''))
+        filename <- file.path(rootInputDataFolder, dataSetName, paste(dataNature, "_", dataSetName, ".txt", sep=''))
         # actual loading of the file
         read.table(file = filename)    
       }
@@ -43,14 +44,13 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
       cbind(subject, X, y)
     }
     
-    
     # load the training and test data and bind them
     train <- loadAndBind("train")
     test  <- loadAndBind("test") 
     data  <- rbind(train, test)
   
     # load the the colunm names
-    colNames <- read.table(file = file.path(rootDataFolder, "features.txt"))
+    colNames <- read.table(file = file.path(rootInputDataFolder, "features.txt"))
     colNames <- t(colNames[,2])
     colNames <- c("subject", as.vector(colNames), "y")
   
@@ -67,7 +67,7 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
   setDescriptiveActivityNames <- function(data) {
     
     # load the activity names file
-    activityNames <- read.table(file = file.path(rootDataFolder, "activity_labels.txt"))
+    activityNames <- read.table(file = file.path(rootInputDataFolder, "activity_labels.txt"))
     # rename its columns nicely
     colnames(activityNames) <- c("y", "activity")
     # do a join wih the actual data based on the nu:eric value of the activity ('y' column in both data frames)
