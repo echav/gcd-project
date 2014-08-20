@@ -14,15 +14,16 @@ As requested in the assignment, download the data file here: https://d396qusza40
 
 Unzip it: this will create a folder named `UCI HAR Dataset` that contains the data files.
 
-Download the script `run_analysis.R`.
+Download the script `run_analysis.R` in the same folder (at the same level) as `UCI HAR Dataset`.
 
 In R, source it:
-* if needed, make the directory that constains the script the working directory (using the `cwd`command)
+* make the directory that constains the script the working directory (using the `cwd`command)
 * execute `source("run_analysis.R")`
+* this will launch the script
 
-Call the `run_analysis` function `run_analysis(PATH-TO-UCI-HAR-DATASET, OUTPUT-FILENAME)` providing as parameters the path to the folder containing the uncompressed input data and the name of the filewhere cleaned-up data will be saved.
-
-Note: the `run_analysis` function also returns the result data so you can use it directly if needed: `clean_data <- run_analysis(PATH-TO-UCI-HAR-DATASET, OUTPUT-FILENAME)`.
+The script will generate in the directory 2 files:
+* `questions_1_4.txt`: contains the output of the sequence of the questions 1 to 4
+* `question_5.txt`: contains the output of the question 5
 
 ### How this script works
 
@@ -32,7 +33,7 @@ The `loadRawData` function takes care of loading all the relevant data (the `X`,
 
 For the `test` files, the 3 `X`, `y` and `subject` files are actually loaded by the same `loadTable` function, and then they are coloumn bound. This is done in the `loadAndBind`function that is also used to load the `train` data, given that the files organization is the same in both data sets.
 
-After that, the 2 resultting data frames are row bound.
+After that, the 2 resulting data frames are row-bound.
 
 At last, the column names are loaded from the `features` file, and completed so that appropriate column names are assigned to the global data frame.
 
@@ -58,3 +59,10 @@ We use a simple transformation to rename the variables that look like tBodyAcc-m
 * remove the parenthesis that do not really add any useful information to the reader
 
 This is done in the `tidyColNames` function using regular expressions and the R `gsub` function.
+
+#### Compute average of each variable for each activity and each subject
+
+This is done using the `plyr` and `reshape2` libraries that may need to be installed (using `install.packages`)
+* first we melt all the features column, keeping the Subject and Activity columns as "indexes": this creates a table with 3 columns (Subject, Activity, and a "variable")
+* the we use `ddply` to apply a `mean` computation on the "variable column", grouping by Subject and Activity
+* at last we set nicer column names and we save the file
