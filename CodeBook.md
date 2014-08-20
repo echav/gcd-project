@@ -65,7 +65,7 @@ We apply a common convention to the column names of our data frame:
 * start with an uppercase
 * use `.` as separator instead of `-`
 * remove the parenthesis in the feature column names
-* replace the `f` prefix by Freq and `t` prefix by Time
+* replace the `f` prefix by `Freq` and `t` prefix by `Time`
 
 So we get the following column names:
 * Subject
