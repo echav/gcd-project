@@ -1,17 +1,11 @@
 # This function cleans the data that must be downloaded from 
 # https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip and unzipped, then it saves
-# (and returns) the cleaned up data.
+# (and returns) the cleaned up data. It is assumed the Samsung data are in the working directory.
+# It outputs 2 files: questions_1_to_4.txt and question_5.txt
 #
-# Arguments:
-# - rootInputDataFolder : where the input unzziped data files are (assuming the file organization inside the unzipped 
-# folder has not been changed)
-# - outputFilename : file where cleaned data will be saved
-#
-# Example usage:
-#   source("run_analysis.R")
-#   run_analysis("/Users/ech/Documents/docs_no_backup/UCI HAR Dataset", "/Users/ech/Documents/docs_no_backup/output.txt")
-#
-run_analysis <- function(rootInputDataFolder, outputFilename) {
+run_analysis <- function(rootInputDataFolder) {
+  
+  rootInputDataFolder <- "UCI HAR Dataset"
   
   ## HELPER FUNCTIONS  ################################################################################################
   
@@ -96,6 +90,8 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
       dirty <- gsub("\\(\\)", "", dirty)
       # replace - by . and return the result
       gsub("\\-", ".", dirty)
+      # replace subject by Subject
+      gsub("^subject$", "Subject", dirty)
     }
     # apply the algorithm to all column names and set the new col names to the input data frame
     colnames(data) <- lapply(names(data), tidy)    
@@ -109,20 +105,24 @@ run_analysis <- function(rootInputDataFolder, outputFilename) {
   data <- loadRawData()
   
   # Q2 : keep only subject, means and stds, and y columns
-  data <- data[,grepl("(Subject)|(mean)|(std)|(^y$)", names(data))]
+  data2 <- data[,grepl("(subject)|(mean)|(std)|(^y$)", names(data))]
   
   # Q3 : load the lables for activities and merge with data 
-  data <- setDescriptiveActivityNames(data)
+  data2 <- setDescriptiveActivityNames(data2)
 
   # Q4 : tidy column names
-  data <- tidyColNames(data)
+  data2 <- tidyColNames(data2)
   
   # save the resulting data
-  write.table(x = data, file = outputFilename)
+  write.table(x = data2, file = "questions_1_to_4.txt")
 
-  # also return the result
-  data
+  # Q5 : average of each variable for each activity and each subject
+  melted <- melt(data, id.vars=c("subject", "y"))
+  tidy <- ddply(melted, c("subject","y", "variable"), summarise, mean = mean(value))
+  colnames(tidy) <- c("Subject", "Activity", "Variable", "Mean")
+  write.table(x=tidy, file="question_5.txt", row.name=FALSE)
+    
 }
 
-
+run_analysis()
 
