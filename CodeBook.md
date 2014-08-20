@@ -49,6 +49,30 @@ subject_train.txt | X_train.txt                          | y_train.txt
                   |                                      |
 ```
 
+#### Subsetting of columns
+
+We keep only mean and std feature columns, which can be done by inspecting the 561 feature labels and keeping only the ones that contain "mean" or "std".
+
+#### Set human readable activity labels
+
+Replace the `y` column in the diagram above by a column that contain actual activity labels, as described in the `activity_labesl.txt` file.
+
+This is done by merging our data frame with the `activity_labels.txt` content (on its id), and then removing the `y` column.
+
+#### Tidy column names
+
+We apply a common convention to the column names of our data frame:
+* start with an uppercase
+* use `.` as separator instead of `-`
+* remove the parenthesis in the feature column names
+* replace the `f` prefix by Freq and `t` prefix by Time
+
+So we get the following column names:
+* Subject
+* Activity
+* columns which look like `TimeBodyAcc.mean.X` (instead of `tBodyAcc-mean()-X`)
+
+
 
 
 
