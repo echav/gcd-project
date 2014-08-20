@@ -8,6 +8,10 @@ Data comes from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FU
 These data represent data collected from the accelerometers from the Samsung Galaxy S smartphone on several subjects, for several acticities.
 A complete description of these data is available here: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
+### Units and values
+
+Actual values and units for features have not been modified: thus the description provoded with the original data remains valid.
+
 ### Form of the data
 
 Data are provided in several files and we are going to use only a subset of those.
@@ -30,7 +34,7 @@ UCI HAR Dataset (root folder)
 ```
 The `train` files have 7352 records and the `test` files have 2947 records.
 
-### Data preparation
+### Data preparation for questions 1 to 4
 
 #### Binding of the files
 
@@ -71,6 +75,16 @@ So we get the following column names:
 * Subject
 * Activity
 * columns which look like `TimeBodyAcc.mean.X` (instead of `tBodyAcc-mean()-X`)
+
+### Data preparation for question 5
+
+Starting from the output of the "Binding the files" step described above, we applied the following treatment: for each feature, compute the mean value grouping by (subject, activity).
+
+This resulted in a file with :
+* 3 columns: Subject, Activity (its id), Variable (name of the feature), Mean (mean value of the feature for this subject and this activity)
+* 85860 rows
+
+
 
 
 
