@@ -60,7 +60,7 @@ We use a simple transformation to rename the variables that look like tBodyAcc-m
 
 This is done in the `tidyColNames` function using regular expressions and the R `gsub` function.
 
-#### Compute average of each variable for each activity and each subject
+### Compute average of each variable for each activity and each subject (question 5)
 
 This is done using the `plyr` and `reshape2` libraries that may need to be installed (using `install.packages`)
 * first we melt all the features column, keeping the Subject and Activity columns as "indexes": this creates a table with 3 columns (Subject, Activity, and a "variable")
